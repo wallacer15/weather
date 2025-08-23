@@ -1,0 +1,19 @@
+:host {
+  display: block;
+  height: 100dvh;
+  background: #0b0f17;
+  color: #e6e7eb;
+}
+.wrap {
+  position: relative;
+  height: 100%;
+}
+.map {
+  position: absolute;
+  inset: 0;
+}
+.legend {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+}

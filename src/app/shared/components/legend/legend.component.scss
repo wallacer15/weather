@@ -1,0 +1,117 @@
+.legend {
+  --bg: #0f1420e6;
+  --fg: #e6edf3;
+  --muted: #98a2b3;
+  --border: #1b2230;
+  --accent1: #2c7bb6;
+  --accent2: #abd9e9;
+  --accent3: #ffffbf;
+  --accent4: #fdae61;
+  --accent5: #d7191c;
+
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  min-width: 220px;
+  display: grid;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.block {
+  display: grid;
+  gap: 6px;
+}
+
+.title {
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.scale .bar {
+  height: 10px;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--accent1) 0%,
+    var(--accent2) 25%,
+    var(--accent3) 50%,
+    var(--accent4) 75%,
+    var(--accent5) 100%
+  );
+  border: 1px solid #00000040;
+}
+
+.ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  color: var(--muted);
+}
+
+.hint {
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.pressure {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  display: inline-block;
+  background: #8ab4f8;
+  border: 1px solid #00000040;
+  border-radius: 999px;
+}
+.dot--sm {
+  width: 10px;
+  height: 10px;
+}
+.dot--lg {
+  width: 18px;
+  height: 18px;
+}
+
+.lbl {
+  margin-left: 4px;
+}
+.spacer {
+  flex: 1;
+}
+
+.wind {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.line {
+  width: 36px;
+  height: 3px;
+  background: #50c8ff;
+  border-radius: 2px;
+  opacity: 0.9;
+}
+.arrow {
+  font-family: "Segoe UI Symbol", "Segoe UI", Arial, Helvetica, sans-serif;
+  color: #50c8ff;
+  line-height: 1;
+  font-size: 14px;
+}
+
+.legend-card {
+  background: #101418cc;
+  border: 1px solid #1b2230;
+  border-radius: 10px;
+  padding: 6px 8px;
+  color: #e6e7eb;
+  backdrop-filter: blur(6px);
+}
+.row {
+  font-size: 12px;
+  color: #cbd5e1;
+}

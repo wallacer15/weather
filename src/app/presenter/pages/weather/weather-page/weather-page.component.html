@@ -1,0 +1,30 @@
+<div class="page">
+  <app-weather-controls
+    [variable]="variable"
+    [heatRadius]="heatRadius"
+    [heatOpacity]="heatOpacity"
+    [loading]="loading"
+    [lastUpdated]="lastUpdated"
+    [error]="error"
+    [showLabels]="showLabels"
+    [showBasemapLabels]="showBasemapLabels"
+    (variableChange)="variable = $event"
+    (heatRadiusChange)="heatRadius = $event"
+    (heatOpacityChange)="heatOpacity = $event"
+    (showLabelsChange)="showLabels = $event"
+    (showBasemapLabelsChange)="showBasemapLabels = $event"
+    (refresh)="reload()"
+  ></app-weather-controls>
+
+  <app-weather-map
+    class="map"
+    [points]="points"
+    [variable]="variable"
+    [heatRadius]="heatRadius"
+    [heatOpacity]="heatOpacity"
+    [showLabels]="showLabels"
+    [showBasemapLabels]="showBasemapLabels"
+  ></app-weather-map>
+
+  <app-legend class="legend"></app-legend>
+</div>
