@@ -69,7 +69,11 @@
     </label>
   </div>
 
-  <div class="row status">
+  <div class="row">
+    <button class="btn" (click)="resetView.emit()">Reset view</button>
+  </div>
+
+  <div class="row status" role="status" aria-live="polite">
     <small class="muted" *ngIf="lastUpdated"
       >Updated {{ lastUpdated | date : "shortTime" }}</small
     >

@@ -3,10 +3,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   NgZone,
   OnChanges,
   OnDestroy,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -66,6 +68,8 @@ export class WeatherMapComponent
   @Input({ required: true }) heatOpacity!: number;
   @Input() showLabels = true;
   @Input() showBasemapLabels = false;
+
+  @Output() stationSelect = new EventEmitter<DeckPoint>();
 
   private map?: maplibregl.Map;
   private overlay?: MapboxOverlay;
@@ -145,8 +149,12 @@ export class WeatherMapComponent
     this.fitToPointsOnce();
 
     if (this.variable === 'temp') {
-      const tMin = -5,
-        tMax = 40;
+      const temps = this.points
+        .filter((p) => p.temp != null)
+        .map((p) => p.temp!);
+      const pad = 2;
+      const tMin = temps.length ? Math.floor(Math.min(...temps) - pad) : -5;
+      const tMax = temps.length ? Math.ceil(Math.max(...temps) + pad) : 40;
 
       const heat = new HeatmapLayer({
         id: 'temp-heat',
@@ -167,6 +175,10 @@ export class WeatherMapComponent
         radiusMinPixels: 4,
         getFillColor: (d: DeckPoint) =>
           colorRamp(d.temp!, tMin, tMax, this.heatOpacity),
+        onClick: (info: any) => {
+          if (info.object)
+            this.zone.run(() => this.stationSelect.emit(info.object));
+        },
       });
 
       const layers: any[] = [heat, dots];
@@ -185,11 +197,16 @@ export class WeatherMapComponent
           background: true,
           getBackgroundColor: [0, 0, 0, 130],
           backgroundPadding: [2, 2],
-          getTextAnchor: () => 'middle',
-          getAlignmentBaseline: () => 'bottom',
+          getTextAnchor: () => 'middle' as const,
+          getAlignmentBaseline: () => 'bottom' as const,
           getPixelOffset: () => [0, -6],
           parameters: { depthTest: false },
           billboard: true,
+          pickable: true,
+          onClick: (info: any) => {
+            if (info.object)
+              this.zone.run(() => this.stationSelect.emit(info.object));
+          },
         });
         layers.push(tempLabels);
       }
@@ -199,8 +216,8 @@ export class WeatherMapComponent
     }
 
     if (this.variable === 'pressure') {
-      const pMin = 980,
-        pMax = 1040;
+      const pMin = 980;
+      const pMax = 1040;
 
       const bubbles = new ScatterplotLayer({
         id: 'pressure',
@@ -212,6 +229,10 @@ export class WeatherMapComponent
         radiusMinPixels: 4,
         getFillColor: (d: DeckPoint) =>
           colorRamp(d.pressure!, pMin, pMax, 0.85),
+        onClick: (info: any) => {
+          if (info.object)
+            this.zone.run(() => this.stationSelect.emit(info.object));
+        },
       });
 
       const layers: any[] = [bubbles];
@@ -222,16 +243,22 @@ export class WeatherMapComponent
           data: this.points.filter((p) => p.pressure != null),
           getPosition: (d: DeckPoint) => d.position,
           getText: (d: DeckPoint) => `${Math.round(d.pressure!)} hPa`,
-          characterSet: '0123456789hPa -+',
+          characterSet: Array.from('0123456789hPa -+'),
           fontFamily: '"Segoe UI", Arial, Helvetica, sans-serif',
           getSize: 12,
           sizeUnits: 'pixels',
           getColor: [255, 255, 255, 230],
           getBackgroundColor: [0, 0, 0, 130],
           backgroundPadding: [2, 2],
-          getTextAnchor: () => 'middle',
-          getAlignmentBaseline: () => 'bottom',
+          getTextAnchor: () => 'middle' as const,
+          getAlignmentBaseline: () => 'bottom' as const,
           getPixelOffset: () => [0, -6],
+          billboard: true,
+          pickable: true,
+          onClick: (info: any) => {
+            if (info.object)
+              this.zone.run(() => this.stationSelect.emit(info.object));
+          },
         });
         layers.push(pressureLabels);
       }
@@ -253,6 +280,7 @@ export class WeatherMapComponent
           );
           const end = path[path.length - 1] as [number, number];
           return {
+            ...p,
             path,
             lon: p.position[0],
             lat: p.position[1],
@@ -260,7 +288,6 @@ export class WeatherMapComponent
             endLat: end[1],
             speed: p.windSpeed!,
             dirTo,
-            tooltip: p.tooltip,
           };
         });
 
@@ -272,6 +299,10 @@ export class WeatherMapComponent
         widthUnits: 'pixels',
         getWidth: 3,
         getColor: [80, 200, 255, 220],
+        onClick: (info: any) => {
+          if (info.object)
+            this.zone.run(() => this.stationSelect.emit(info.object));
+        },
       });
 
       const layers: any[] = [paths];
@@ -282,17 +313,45 @@ export class WeatherMapComponent
           data: wind,
           getPosition: (d: any) => [d.endLon, d.endLat],
           getText: () => '➤',
-          characterSet: '➤',
+          characterSet: Array.from('➤'),
           fontFamily:
             '"Segoe UI Symbol", "Segoe UI", Arial, Helvetica, sans-serif',
           getAngle: (d: any) => 90 - d.dirTo,
           getSize: 16,
           sizeUnits: 'pixels',
           getColor: [80, 200, 255, 230],
-          getTextAnchor: () => 'middle',
-          getAlignmentBaseline: () => 'center',
+          getTextAnchor: () => 'middle' as const,
+          getAlignmentBaseline: () => 'center' as const,
+          billboard: true,
+          pickable: true,
+          onClick: (info: any) => {
+            if (info.object)
+              this.zone.run(() => this.stationSelect.emit(info.object));
+          },
         });
-        layers.push(arrows);
+
+        const speedLabels = new TextLayer({
+          id: 'wind-speed',
+          data: wind,
+          getPosition: (d: any) => [d.endLon, d.endLat],
+          getText: (d: any) => `${Math.round(d.speed)} m/s`,
+          characterSet: Array.from('0123456789 m/s'),
+          fontFamily: '"Segoe UI", Arial, Helvetica, sans-serif',
+          getSize: 11,
+          sizeUnits: 'pixels',
+          getColor: [80, 200, 255, 230],
+          getTextAnchor: () => 'start' as const,
+          getAlignmentBaseline: () => 'center' as const,
+          getPixelOffset: () => [6, 0],
+          billboard: true,
+          pickable: true,
+          onClick: (info: any) => {
+            if (info.object)
+              this.zone.run(() => this.stationSelect.emit(info.object));
+          },
+        });
+
+        layers.push(arrows, speedLabels);
       }
 
       this.overlay.setProps({ layers });
@@ -300,6 +359,11 @@ export class WeatherMapComponent
     }
 
     this.overlay.setProps({ layers: [] });
+  }
+
+  fitView(): void {
+    this.hasFit = false;
+    this.fitToPointsOnce();
   }
 
   ngOnDestroy(): void {

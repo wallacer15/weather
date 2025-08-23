@@ -13,19 +13,39 @@
     (heatOpacityChange)="heatOpacity = $event"
     (showLabelsChange)="showLabels = $event"
     (showBasemapLabelsChange)="showBasemapLabels = $event"
-    (refresh)="reload()"
+    (refresh)="captureFrame()"
+    (resetView)="onResetView()"
   ></app-weather-controls>
 
   <app-weather-map
     class="map"
-    [points]="points"
+    [points]="displayedPoints?.length ? displayedPoints : points"
     [variable]="variable"
     [heatRadius]="heatRadius"
     [heatOpacity]="heatOpacity"
     [showLabels]="showLabels"
     [showBasemapLabels]="showBasemapLabels"
+    (stationSelect)="onSelectStation($event)"
   ></app-weather-map>
 
   <app-legend class="legend"></app-legend>
   <app-weather-forecast class="forecast"></app-weather-forecast>
+
+  <div class="timeline" *ngIf="frames.length">
+    <button class="btn" (click)="captureFrame()">Capture</button>
+    <button class="btn" (click)="togglePlay()">
+      {{ isPlaying ? "Pause" : "Play" }}
+    </button>
+    <input
+      type="range"
+      [min]="0"
+      [max]="frames.length - 1"
+      [value]="frameIndex"
+      [disabled]="frames.length === 0"
+      (input)="setFrame($event.target.valueAsNumber)"
+    />
+    <span class="tick" *ngIf="frameIndex >= 0">{{
+      frames[frameIndex]?.time | date : "shortTime"
+    }}</span>
+  </div>
 </div>

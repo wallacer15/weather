@@ -1,12 +1,14 @@
 <div class="forecast-card" *ngIf="vm$ | async as vm">
   <div class="header">
     <div class="title">
-      {{ vm.today.title }} <span class="badge">NL-wide</span>
+      {{ vm.today.title }}
+      <span class="badge">NL-wide</span>
     </div>
     <div class="meta" *ngIf="vm.today.published as p">
       Updated {{ p | date : "shortTime" }}
     </div>
   </div>
+
   <div class="summary">{{ vm.today.summary }}</div>
   <div class="sun">
     <span *ngIf="vm.today.sunrise as sr"

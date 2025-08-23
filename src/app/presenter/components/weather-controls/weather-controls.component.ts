@@ -31,7 +31,7 @@ export class WeatherControlsComponent {
   @Output() variableChange = new EventEmitter<WeatherVariable>();
   @Output() heatRadiusChange = new EventEmitter<number>();
   @Output() heatOpacityChange = new EventEmitter<number>();
-
+  @Output() resetView = new EventEmitter<void>();
   @Output() refresh = new EventEmitter<void>();
 
   setVar(v: WeatherVariable) {
