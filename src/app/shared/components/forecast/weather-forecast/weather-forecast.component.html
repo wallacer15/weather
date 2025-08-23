@@ -1,0 +1,37 @@
+<div class="forecast-card" *ngIf="vm$ | async as vm">
+  <div class="header">
+    <div class="title">
+      {{ vm.today.title }} <span class="badge">NL-wide</span>
+    </div>
+    <div class="meta" *ngIf="vm.today.published as p">
+      Updated {{ p | date : "shortTime" }}
+    </div>
+  </div>
+  <div class="summary">{{ vm.today.summary }}</div>
+  <div class="sun">
+    <span *ngIf="vm.today.sunrise as sr"
+      >Sunrise {{ sr | date : "shortTime" }}</span
+    >
+    <span *ngIf="vm.today.sunset as ss"
+      >Sunset {{ ss | date : "shortTime" }}</span
+    >
+  </div>
+  <div class="days">
+    <div class="day" *ngFor="let d of vm.days">
+      <div class="d">{{ d.date | date : "EEE" }}</div>
+      <img *ngIf="d.iconUrl" [src]="d.iconUrl" alt="" />
+      <div class="t">
+        <span class="max" *ngIf="d.max !== null"
+          >{{ d.max | number : "1.0-0" }}°</span
+        >
+        <span class="min" *ngIf="d.min !== null"
+          >{{ d.min | number : "1.0-0" }}°</span
+        >
+      </div>
+      <div class="rc" *ngIf="d.rainChance !== null">{{ d.rainChance }}%</div>
+      <div class="w" *ngIf="d.wind !== null && d.windDirection">
+        {{ d.windDirection }} {{ d.wind }}
+      </div>
+    </div>
+  </div>
+</div>

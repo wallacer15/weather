@@ -12,6 +12,7 @@ import { LegendComponent } from '@shared/components/legend/legend.component';
 
 import { WeatherService } from '@domain/services/weather.service';
 import { DeckPoint, WeatherVariable } from '@shared/models/weather';
+import { WeatherForecastComponent } from '@shared/components/forecast/weather-forecast/weather-forecast.component';
 
 @Component({
   selector: 'app-weather-page',
@@ -21,6 +22,7 @@ import { DeckPoint, WeatherVariable } from '@shared/models/weather';
     WeatherControlsComponent,
     WeatherMapComponent,
     LegendComponent,
+    WeatherForecastComponent,
   ],
   templateUrl: './weather-page.component.html',
   styleUrls: ['./weather-page.component.scss'],

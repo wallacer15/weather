@@ -26,3 +26,22 @@ export interface DeckPoint {
   windSpeed?: number;
   tooltip: string;
 }
+
+export interface TodayReport {
+  title: string;
+  summary: string;
+  published: Date | null;
+  sunrise: Date | null;
+  sunset: Date | null;
+}
+
+export interface ForecastDay {
+  date: Date;
+  min: number | null;
+  max: number | null;
+  rainChance: number | null;
+  wind: number | null;
+  windDirection: string | null;
+  iconUrl: string | null;
+  description: string | null;
+}
