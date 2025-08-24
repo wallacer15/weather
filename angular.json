@@ -44,6 +44,8 @@
                   "maximumError": "800kB"
                 }
               ],
+              "ssr": false,
+              "baseHref": "/weather/",
               "outputHashing": "all"
             },
             "development": {
